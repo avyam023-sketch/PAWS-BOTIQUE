@@ -30,7 +30,7 @@ A scroll-driven website for **Paws Boutique**, a pedigree puppy business in Amri
 - **Puppies** (`puppies.html`) lists all breeds with search, size tabs, a "Good for flats" filter and a "Handles summer heat" filter. `?size=toy` (or small, medium, large, giant) opens a tab directly.
 - **Breed pages** (`breeds/<id>.html`): one SEO page per breed ("Labrador Retriever puppies for sale in Amritsar") with a fit table, the health promise and similar breeds.
 - **View Price** opens the quote **flashcards**: breed → male/female → when → name and WhatsApp number. The breed is pre-selected from the card the visitor tapped. Each answer flips to the next card. The panel always shows **Call us** and **WhatsApp us** as alternatives.
-- Desktop extras: a custom cursor ("Meet" / "Price" labels), magnetic buttons, 3D card tilt and a scroll progress bar. A floating WhatsApp button appears on every page.
+- Desktop extras: a custom cursor ("Meet" / "Price" labels), magnetic buttons and 3D card tilt. A floating WhatsApp button appears on every page.
 
 ## Run it
 
