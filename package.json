@@ -1,0 +1,11 @@
+{
+  "name": "paws-boutique-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Paws Boutique, Amritsar: scroll-driven puppy website with breed catalogue and flashcard quote form",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "serve": "npx --yes http-server dist -p 8080 -c-1",
+    "dev": "npm run build && npm run serve"
+  }
+}

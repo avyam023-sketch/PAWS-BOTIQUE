@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pawsboutique.in/sitemap.xml
