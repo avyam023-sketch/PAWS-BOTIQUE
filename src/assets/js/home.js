@@ -9,7 +9,10 @@
 
   // Manifesto words are split up front so the no-motion layout matches.
   const words = $("[data-words]");
-  if (words) words.innerHTML = words.textContent.split(" ").map((w) => `<span class="w">${w}</span>`).join(" ");
+  // Highlighted phrases (<b class="hl">) keep their colour.
+  const esc = (t) => t.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+  const wrap = (t) => t.split(/(\s+)/).map((p) => (p.trim() ? `<span class="w">${esc(p)}</span>` : p)).join("");
+  if (words) words.innerHTML = Array.from(words.childNodes).map((n) => (n.nodeType === 3 ? wrap(n.textContent) : `<b class="${n.className}">${wrap(n.textContent)}</b>`)).join("");
 
   if (!S.motion) {
     loader && loader.remove();
@@ -121,9 +124,6 @@
     S.lenis && S.lenis.stop();
     const back = $("[data-loader-back]", loader);
     const front = $("[data-loader-front]", loader);
-    const fill = $("[data-loader-fill]", loader);
-    const paw = $("[data-loader-paw]", loader);
-    const num = $("[data-loader-n]", loader);
     const msg = $("[data-loader-msg]", loader);
     const msgs = ["Fetching your new best friend…", "Checking vaccination records…", "Fluffing the fur…", "Practising sit and stay…", "Almost there…"];
     gsap.from(back, { yPercent: 30, opacity: 0, duration: 0.8, ease: "back.out(2)" });
@@ -132,21 +132,14 @@
     let loaded = 0;
     urls.forEach((u) => { const im = new Image(); im.onload = im.onerror = () => loaded++; im.src = u; });
     const t0 = performance.now();
-    const shown = { v: 0 };
     let mi = 0;
     const msgTimer = setInterval(() => {
       mi = (mi + 1) % msgs.length;
       gsap.to(msg, { y: -10, opacity: 0, duration: 0.2, onComplete: () => { msg.textContent = msgs[mi]; gsap.fromTo(msg, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }); } });
     }, 700);
+    // Wait for the hero husky's images, and at least 1.6 s so the scene can play.
     const tick = () => {
-      const target = Math.min(loaded / urls.length, (performance.now() - t0) / 1600);
-      shown.v += (target - shown.v) * 0.12;
-      const p = Math.min(1, shown.v + 0.002);
-      fill.style.width = `${p * 100}%`;
-      paw.style.left = `${p * 100}%`;
-      paw.style.transform = `rotate(${Math.sin(performance.now() / 90) * 18}deg)`;
-      num.textContent = Math.round(p * 100);
-      if (p >= 0.995 && loaded === urls.length) { gsap.ticker.remove(tick); finish(); }
+      if (loaded === urls.length && performance.now() - t0 > 1600) { gsap.ticker.remove(tick); finish(); }
     };
     gsap.ticker.add(tick);
     // Never hold the page hostage to a slow network.
@@ -155,7 +148,6 @@
     function finish() {
       clearInterval(msgTimer);
       clearTimeout(cap);
-      num.textContent = "100";
       msg.textContent = "Ready!";
       gsap.killTweensOf(back);
       const turn = gsap.timeline();
@@ -163,7 +155,7 @@
         .set(back, { opacity: 0 })
         .fromTo(front, { opacity: 1, scaleX: 0.82, scaleY: 1.06 }, { scaleX: 1, scaleY: 1, duration: 0.7, ease: "elastic.out(1, 0.45)" })
         .fromTo("[data-loader-bubble]", { scale: 0, rotation: -14 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(3)" }, "-=0.55")
-        .to([msg, ".loader__track", ".loader__pct"], { y: 24, opacity: 0, duration: 0.3, stagger: 0.04, ease: "power2.in" }, "+=0.35")
+        .to([msg, ".loader__dots"], { y: 24, opacity: 0, duration: 0.3, stagger: 0.04, ease: "power2.in" }, "+=0.35")
         .to("[data-loader-bubble]", { scale: 0, duration: 0.2 }, "<")
         .add(() => {
           // Fly the loader husky onto the hero husky, and close the maroon backdrop around it.
@@ -245,6 +237,7 @@
   }
 
   /* 03 · Stats count up; the tilted bands speed up with scroll */
+  gsap.from(".stat", { y: 90, rotation: (i) => [-8, 6, -5][i], scale: 0.9, opacity: 0, duration: 1.1, stagger: 0.12, ease: "back.out(1.6)", scrollTrigger: { trigger: ".stats__grid", start: "top 85%", once: true } });
   $$("[data-count]").forEach((el) => {
     const to = +el.dataset.count, o = { v: 0 };
     el.textContent = "0";
@@ -356,7 +349,7 @@
     const o = { t: 18 };
     gsap.timeline({ scrollTrigger: { trigger: "[data-heat-section]", start: "top 75%", end: "center 55%", scrub: 1 } })
       .to(o, { t: 45, ease: "none", onUpdate: () => (temp.textContent = Math.round(o.t)) }, 0)
-      .fromTo("[data-heat-section]", { backgroundColor: "#dde0bd" }, { backgroundColor: "#f2d5f8", ease: "none" }, 0)
+      .fromTo("[data-heat-section]", { backgroundColor: "#d9f2ff" }, { backgroundColor: "#f2d5f8", ease: "none" }, 0)
       .fromTo(".heat__temp", { scale: 0.8, color: "#3a9fd0" }, { scale: 1, color: "#4a051c", ease: "none" }, 0);
     gsap.from("[data-heat-col]", { y: 80, opacity: 0, rotation: (i) => [-4, 0, 4][i], duration: 1.1, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".heat__cols", start: "top 85%", once: true } });
   }

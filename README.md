@@ -3,15 +3,15 @@
 A scroll-driven website for **Paws Boutique**, a pedigree puppy business in Amritsar. Every page is built to end in one action: **ask for a price**.
 
 - **Home** is a scroll-driven story built with GSAP 3.13 (ScrollTrigger, SplitText, Flip) and Lenis smooth scrolling, starring the husky mascot:
-  1. **Loading screen.** The husky sits with its back to you while a paw walks along the progress bar, with rotating lines ("Fluffing the fur…"). At 100% it turns round and barks "Woof!", then flies into its place in the hero while the maroon backdrop closes around it. It plays once per visit.
+  1. **Loading screen (no progress bar).** The husky sits with its back to you while bouncing dots and rotating lines ("Fluffing the fur…") play. Once the hero images are in, it turns round and barks "Woof!", then flies into its place in the hero while the maroon backdrop closes around it. It plays once per visit.
   2. **Hero.** A huge headline sits behind the husky: "Meet your new best friend / sofa buddy / shadow / walk partner / forever pup". The words swap letter by letter.
      - The husky is three layers (tail, body and head). Its head follows the cursor, its tail wags, it breathes and glances around when idle.
      - Tapping it makes it hop with hearts and a bark.
      - Sticker badges float round it and drift with the cursor. Paw prints trail the cursor.
      - On scroll, the headline splits apart, the stickers fly off, the husky leans in and a maroon curtain rises.
-  3. **Manifesto.** It lights up word by word.
-  4. **Bands and stats.** Two tilted marquee bands react to scroll speed, above counters.
-  5. **Sizes.** The five size groups scroll sideways while the paw grows.
+  3. **Manifesto.** It lights up word by word. Key phrases glow in sky and lilac.
+  4. **Bands and stats.** Two tilted marquee bands react to scroll speed. The counters are tilted sticker tiles in sky, lilac and maroon.
+  5. **Sizes.** The five size groups scroll sideways, each panel in its own palette colour, while the paw grows.
   6. **Breed listing.** Sticker-style cards with Flip-animated filter tabs and 3D tilt.
   7. **How it works (pinned).** As you scroll, a phone acts out a price request for a husky:
      - tapping View Price, answering the flashcards
@@ -21,6 +21,7 @@ A scroll-driven website for **Paws Boutique**, a pedigree puppy business in Amri
   9. **Summer guide.** The thermometer climbs to 45°C.
   10. **FAQ.**
   11. **Final call to action.** The husky looks up at a speech bubble that cycles through lines. The back-view husky sits on the footer's top edge.
+- **Layout:** sections stack like sheets: the breed listing (lilac), health record, summer guide and FAQ (white cards on sage) each slide over the one before with rounded tops. "How it works" sits on sky.
 - **Everywhere:**
   - Headings drop in letter by letter.
   - The price buttons burst into paw confetti.

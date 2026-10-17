@@ -169,8 +169,7 @@ ${preloader ? `<div class="loader" data-loader aria-hidden="true">
       <p class="loader__bubble" data-loader-bubble>Woof!</p>
     </div>
     <p class="loader__msg" data-loader-msg>Fetching your new best friend…</p>
-    <div class="loader__track"><span class="loader__fill" data-loader-fill></span><span class="loader__paw" data-loader-paw>${icon.paw}</span></div>
-    <p class="loader__pct"><span data-loader-n>0</span>%</p>
+    <span class="loader__dots" aria-hidden="true"><i></i><i></i><i></i></span>
   </div>
 </div>` : ""}
 <div class="progress" aria-hidden="true"><span data-progress></span></div>

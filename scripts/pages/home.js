@@ -25,7 +25,7 @@ module.exports = function home(data) {
     ["moderate", "Fine with care", "Happy year-round with a cool room at midday and walks before 9 am."],
     ["ac", "Needs AC in summer", "Short noses or heavy coats. Wonderful dogs — with an air-conditioned room from April to September."],
   ];
-  const manifesto = "Most people buy a puppy from a photo and hope for the best. We'd rather you meet them. Every puppy here is vet-checked, vaccinated for its age and at least eight weeks old — and goes home with the records to prove it.";
+  const manifesto = "Most people buy a puppy from a photo and [hope for the best.] We'd rather you {meet them.} Every puppy here is {vet-checked,} {vaccinated for its age} and {at least eight weeks old} — and goes home with [the records to prove it.]";
 
   const body = `
 <section class="hero" data-hero>
@@ -57,7 +57,7 @@ module.exports = function home(data) {
 <section class="manifesto" data-manifesto>
   <div class="wrap">
     <p class="eyebrow eyebrow--light">Why ${esc(c.name)}</p>
-    <p class="manifesto__text" data-words>${esc(manifesto)}</p>
+    <p class="manifesto__text" data-words>${esc(manifesto).replace(/\{([^}]+)\}/g, '<b class="hl hl--sky">$1</b>').replace(/\[([^\]]+)\]/g, '<b class="hl hl--lilac">$1</b>')}</p>
   </div>
 </section>
 
@@ -68,9 +68,9 @@ module.exports = function home(data) {
 
 <section class="stats">
   <div class="wrap stats__grid">
-    <div class="stat"><span class="stat__n" data-count="${data.breeds.length}">${data.breeds.length}</span><span class="stat__l">breeds, from toy to giant</span></div>
-    <div class="stat"><span class="stat__n" data-count="8">8</span><span class="stat__l">weeks minimum before any puppy goes home</span></div>
-    <div class="stat"><span class="stat__n" data-count="1">1</span><span class="stat__l">message to get prices, photos and videos</span></div>
+    <div class="stat stat--sky"><span class="stat__n" data-count="${data.breeds.length}">${data.breeds.length}</span><span class="stat__l">breeds, from toy to giant</span><span class="stat__ic">${icon.paw}</span></div>
+    <div class="stat stat--lilac"><span class="stat__n" data-count="8">8</span><span class="stat__l">weeks minimum before any puppy goes home</span><span class="stat__ic">${icon.check}</span></div>
+    <div class="stat stat--maroon"><span class="stat__n" data-count="1">1</span><span class="stat__l">message to get prices, photos and videos</span><span class="stat__ic">${icon.whatsapp}</span></div>
   </div>
 </section>
 
@@ -84,7 +84,7 @@ module.exports = function home(data) {
     </div>
     ${data.sizes.map((s, i) => {
       const list = data.breeds.filter((b) => b.size === s.id);
-      return `<div class="size" data-size-panel style="--s:${s.scale}">
+      return `<div class="size size--c${i + 1}" data-size-panel style="--s:${s.scale}">
       <div class="size__num">0${i + 1}</div>
       <div class="size__paw">${icon.paw}</div>
       <div class="size__info">
@@ -100,7 +100,7 @@ module.exports = function home(data) {
   <div class="sizes__bar" aria-hidden="true"><span data-sizes-bar></span></div>
 </section>
 
-<section class="listing" id="puppies">
+<section class="listing sheet sheet--lilac" id="puppies">
   <div class="wrap">
     <div class="listing__head">
       <div>
@@ -186,7 +186,7 @@ module.exports = function home(data) {
   <p class="process__note">Illustration of how a price request works.</p>
 </section>
 
-<section class="promise" id="promise" data-promise>
+<section class="promise sheet" id="promise" data-promise>
   <div class="wrap promise__in">
     <div class="passport-wrap">
       <div class="passport" data-passport>
@@ -208,7 +208,7 @@ module.exports = function home(data) {
   </div>
 </section>
 
-<section class="heat" data-heat-section>
+<section class="heat sheet" data-heat-section>
   <div class="wrap">
     <div class="heat__head">
       <div class="heat__temp"><span data-temp>45</span><sup>°C</sup></div>
@@ -227,7 +227,7 @@ module.exports = function home(data) {
   </div>
 </section>
 
-<section class="faq" id="faq">
+<section class="faq sheet sheet--sage" id="faq">
   <div class="wrap faq__in">
     <div>
       <p class="eyebrow">Questions</p>
