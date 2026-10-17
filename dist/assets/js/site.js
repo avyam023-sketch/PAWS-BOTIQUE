@@ -46,17 +46,14 @@
     scrollToEl(el);
   });
 
-  /* ---------- Header + progress ---------- */
+  /* ---------- Header ---------- */
   const header = $("[data-header]");
-  const bar = $("[data-progress]");
   let lastY = window.scrollY;
   function onScroll() {
     const y = window.scrollY;
     header.classList.toggle("is-solid", y > 24);
     header.classList.toggle("is-hidden", y > lastY && y > 500 && !document.body.classList.contains("menu-open"));
     lastY = y;
-    const max = document.documentElement.scrollHeight - innerHeight;
-    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();

@@ -172,7 +172,6 @@ ${preloader ? `<div class="loader" data-loader aria-hidden="true">
     <span class="loader__dots" aria-hidden="true"><i></i><i></i><i></i></span>
   </div>
 </div>` : ""}
-<div class="progress" aria-hidden="true"><span data-progress></span></div>
 <div class="pt" data-pt aria-hidden="true"><div class="pt__paws">${Array.from({ length: 5 }, () => `<span>${icon.paw}</span>`).join("")}</div></div>
 ${header(data, root, page)}
 <main id="main">
