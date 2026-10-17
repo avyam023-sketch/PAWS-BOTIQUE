@@ -41,6 +41,7 @@ function footer(data, root) {
   const c = data.company;
   return `<footer class="footer" id="contact">
   <div class="wrap">
+    <img class="footer__pup" data-footer-pup src="${root}assets/img/brand/husky-back.webp" alt="" aria-hidden="true" loading="lazy" width="386" height="593">
     <div class="footer__top">
       <div>
         <p class="eyebrow eyebrow--light">Visit · Call · WhatsApp</p>
@@ -159,7 +160,19 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 </head>
 <body data-root="${root}" data-page="${page}"${preloader ? " data-loading" : ""}>
 <a class="skip" href="#main">Skip to content</a>
-${preloader ? `<div class="loader" data-loader aria-hidden="true"><div class="loader__paws">${Array.from({ length: 6 }, () => `<span>${icon.paw}</span>`).join("")}</div><div class="loader__words">${["Sit.", "Stay.", "Good puppy."].map((w) => `<span>${w}</span>`).join("")}</div><div class="loader__name">${esc(c.name)} · ${esc(c.city)}</div></div>` : ""}
+${preloader ? `<div class="loader" data-loader aria-hidden="true">
+  <div class="loader__bg" data-loader-bg></div>
+  <div class="loader__in">
+    <div class="loader__stage">
+      <img class="loader__pup loader__pup--back" data-loader-back src="${root}assets/img/brand/husky-back.webp" alt="">
+      <img class="loader__pup loader__pup--front" data-loader-front src="${root}assets/img/brand/husky-front.webp" alt="">
+      <p class="loader__bubble" data-loader-bubble>Woof!</p>
+    </div>
+    <p class="loader__msg" data-loader-msg>Fetching your new best friend…</p>
+    <div class="loader__track"><span class="loader__fill" data-loader-fill></span><span class="loader__paw" data-loader-paw>${icon.paw}</span></div>
+    <p class="loader__pct"><span data-loader-n>0</span>%</p>
+  </div>
+</div>` : ""}
 <div class="progress" aria-hidden="true"><span data-progress></span></div>
 <div class="pt" data-pt aria-hidden="true"><div class="pt__paws">${Array.from({ length: 5 }, () => `<span>${icon.paw}</span>`).join("")}</div></div>
 ${header(data, root, page)}
