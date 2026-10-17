@@ -135,7 +135,7 @@ function quoteModal(data) {
 </div>`;
 }
 
-function layout({ title, description, body, data, depth = 0, page = "", scripts = [], canonical = "", jsonLd = null, preloader = false }) {
+function layout({ title, description, body, data, depth = 0, page = "", scripts = [], modules = [], canonical = "", jsonLd = null, preloader = false }) {
   const c = data.company;
   const root = "../".repeat(depth);
   const url = `${c.siteUrl}/${canonical}`;
@@ -155,12 +155,13 @@ function layout({ title, description, body, data, depth = 0, page = "", scripts 
 <link rel="icon" href="${root}favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${root}assets/css/site.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ""}
-<script>(function(d){d.classList.add("js");if(matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("no-motion");setTimeout(function(){if(!window.PB_READY)d.classList.add("no-motion")},4000)})(document.documentElement)</script>
+<script>(function(d){d.classList.add("js");if(matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("no-motion");else try{if(sessionStorage.getItem("pb-wipe")){d.classList.add("pt-in");sessionStorage.removeItem("pb-wipe")}}catch(e){}setTimeout(function(){if(!window.PB_READY)d.classList.add("no-motion")},4000)})(document.documentElement)</script>
 </head>
 <body data-root="${root}" data-page="${page}"${preloader ? " data-loading" : ""}>
 <a class="skip" href="#main">Skip to content</a>
-${preloader ? `<div class="loader" data-loader aria-hidden="true"><div class="loader__paws">${Array.from({ length: 4 }, () => `<span>${icon.paw}</span>`).join("")}</div><div class="loader__count"><span data-loader-n>0</span></div><div class="loader__name">${esc(c.name)} · ${esc(c.city)}</div></div>` : ""}
+${preloader ? `<div class="loader" data-loader aria-hidden="true"><div class="loader__paws">${Array.from({ length: 6 }, () => `<span>${icon.paw}</span>`).join("")}</div><div class="loader__words">${["Sit.", "Stay.", "Good puppy."].map((w) => `<span>${w}</span>`).join("")}</div><div class="loader__name">${esc(c.name)} · ${esc(c.city)}</div></div>` : ""}
 <div class="progress" aria-hidden="true"><span data-progress></span></div>
+<div class="pt" data-pt aria-hidden="true"><div class="pt__paws">${Array.from({ length: 5 }, () => `<span>${icon.paw}</span>`).join("")}</div></div>
 ${header(data, root, page)}
 <main id="main">
 ${body}
@@ -177,6 +178,7 @@ ${quoteModal(data)}
 <script src="${root}assets/js/data.js"></script>
 <script src="${root}assets/js/site.js"></script>
 ${scripts.map((s) => `<script src="${root}assets/js/${s}"></script>`).join("\n")}
+${modules.map((s) => `<script type="module" src="${root}assets/js/${s}"></script>`).join("\n")}
 </body>
 </html>
 `;

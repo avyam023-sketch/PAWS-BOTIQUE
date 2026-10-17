@@ -133,6 +133,7 @@
   /* ---------- Entrance + scroll reveals ---------- */
   // Draws the lilac highlighter stroke under key words, left to right.
   function highlight(ems) {
+    if (!ems.length) return gsap.timeline();
     return gsap.fromTo(ems, { backgroundSize: "0% 0.38em" }, { backgroundSize: "100% 0.38em", duration: 1, stagger: 0.15, ease: "expo.inOut" });
   }
 
@@ -154,10 +155,10 @@
     if (window.SplitText) {
       $$(".h2:not([data-no-split]), .footer__h").forEach((el) => {
         SplitText.create(el, {
-          type: "lines", mask: "lines", autoSplit: true,
+          type: "words, chars", autoSplit: true,
           onSplit: (self) => gsap.timeline({ scrollTrigger: { trigger: el, start: "top 88%", once: true } })
-            .from(self.lines, { yPercent: 110, duration: 1.2, stagger: 0.1, ease: "expo.out" })
-            .add(highlight(el.querySelectorAll("em")), 0.5),
+            .from(self.chars, { yPercent: 120, rotation: () => gsap.utils.random(-25, 25), opacity: 0, duration: 0.8, stagger: 0.018, ease: "back.out(2)" })
+            .add(highlight(el.querySelectorAll("em")), 0.45),
         });
       });
     }
@@ -462,6 +463,57 @@
     });
     return { open, close };
   })();
+
+  /* ---------- Hearts when a puppy is tapped, confetti on price buttons ---------- */
+  const pawSvg = () => $(".logo__mark svg").outerHTML;
+  const heartSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/></svg>';
+  function fx(x, y, n, html, colors, spread) {
+    if (!motion) return;
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement("span");
+      el.className = "pf-fx";
+      el.innerHTML = html;
+      el.style.color = colors[i % colors.length];
+      document.body.appendChild(el);
+      const a = spread ? Math.random() * Math.PI * 2 : -Math.PI / 2 + gsap.utils.random(-0.7, 0.7);
+      const d = gsap.utils.random(spread ? 80 : 90, spread ? 240 : 190);
+      gsap.fromTo(el, { x: x - 10, y: y - 10, scale: 0, rotation: 0 }, {
+        x: x - 10 + Math.cos(a) * d, y: y - 10 + Math.sin(a) * d - (spread ? 40 : 0), scale: gsap.utils.random(0.7, 1.6), rotation: gsap.utils.random(-120, 120),
+        duration: gsap.utils.random(0.9, 1.4), ease: "power3.out",
+        onComplete: () => gsap.to(el, { opacity: 0, y: "+=30", duration: 0.4, onComplete: () => el.remove() }),
+      });
+    }
+  }
+  window.addEventListener("pb:poke", (e) => fx(e.detail.x, e.detail.y, 8, heartSvg, ["#f2d5f8", "#4a051c", "#89daff"], false));
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-quote-open], [data-confetti]");
+    if (b && e.clientX) fx(e.clientX, e.clientY, 22, pawSvg(), ["#89daff", "#f2d5f8", "#4a051c", "#dde0bd"], true);
+  });
+
+  /* ---------- Page transition: a paw-print panel between pages ---------- */
+  const pt = $("[data-pt]");
+  if (pt && motion) {
+    const paws = $$(".pt__paws span", pt);
+    if (docEl.classList.contains("pt-in")) {
+      gsap.timeline({ delay: 0.15, onComplete: () => docEl.classList.remove("pt-in") })
+        .to(paws, { scale: 0, duration: 0.3, stagger: 0.04, ease: "power2.in" })
+        .to(pt, { clipPath: "inset(0% 0% 100% 0%)", duration: 0.7, ease: "expo.inOut" }, 0.15)
+        .set(pt, { clearProps: "clipPath" });
+    }
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank" || a.hasAttribute("download")) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash) || !/\.html$|\/$/.test(url.pathname)) return;
+      e.preventDefault();
+      try { sessionStorage.setItem("pb-wipe", "1"); } catch (err) {}
+      gsap.timeline({ onComplete: () => (location.href = url.href) })
+        .fromTo(pt, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "expo.inOut" })
+        .fromTo(paws, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.3, stagger: 0.06, ease: "back.out(3)" }, 0.25);
+    });
+    // Coming back through the browser's back button restores this page as it was: lift the panel.
+    window.addEventListener("pageshow", (e) => { if (e.persisted) gsap.set(pt, { clipPath: "inset(100% 0% 0% 0%)" }); });
+  }
 
   initGrid();
   reveals();

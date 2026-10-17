@@ -1,23 +1,13 @@
 /* Homepage: a scroll-driven story that ends at "ask for a price". Choreography lives in src/assets/js/home.js. */
 const { esc, icon, card, breedArt, lines } = require("../lib/ui");
-const { waLink } = require("../lib/layout");
 
-// Paw prints walking diagonally across the hero, left foot / right foot.
-function trail() {
-  const n = 14;
-  return Array.from({ length: n }, (_, i) => {
-    const t = i / (n - 1);
-    const x = 4 + t * 88;
-    const y = 88 - t * 70 + (i % 2 ? -4 : 4);
-    return `<span class="trail__p" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--r:${(48 + (i % 2 ? 10 : -10)).toFixed(0)}deg">${icon.paw}</span>`;
-  }).join("");
-}
+const speech = ["Woof. Ask for my price.", "Tap me. I don't bite.", "Eight weeks old and ready.", "Come meet me in Amritsar."];
+const { waLink } = require("../lib/layout");
 
 module.exports = function home(data) {
   const c = data.company;
   const root = "";
   const byId = Object.fromEntries(data.breeds.map((b) => [b.id, b]));
-  const fan = ["golden-retriever", "pomeranian", "german-shepherd", "shih-tzu", "siberian-husky"].map((id) => byId[id]);
   const featured = data.breeds.filter((b) => b.featured);
   const ordered = [...featured, ...data.breeds.filter((b) => !b.featured)];
   const heatGroups = [
@@ -29,24 +19,30 @@ module.exports = function home(data) {
 
   const body = `
 <section class="hero" data-hero>
-  <div class="hero__trail" aria-hidden="true">${trail()}</div>
   <div class="wrap hero__in">
-    <div class="hero__copy">
+    <div class="hero__copy" data-hero-type>
       <p class="eyebrow" data-hero-in>Pedigree puppies · ${esc(c.city)}</p>
-      <h1 class="hero__h1">${lines(["A healthy puppy,", "raised <em>right.</em>"])}</h1>
+      <h1 class="hero__h1" aria-label="Meet your new ${esc(data.heroBreeds.map((h) => h.word).join(", "))}.">
+        <span class="line" aria-hidden="true"><span>Meet your new</span></span>
+        <span class="line" aria-hidden="true"><span><span class="rot" data-rot>${data.heroBreeds.map((h, i) => `<span class="rot__w" data-rot-word data-coat="${h.coat}">${[...(h.word + ".")].map((ch) => `<span class="rot__c">${esc(ch)}</span>`).join("")}</span>`).join("")}</span></span></span>
+      </h1>
       <p class="hero__lead" data-hero-in>Vet-checked, vaccinated for their age and at least eight weeks old. Meet them in ${esc(c.city)} before you decide.</p>
       <div class="hero__cta" data-hero-in>
-        <a class="btn btn--dark btn--lg" href="#puppies" data-magnetic><span>See puppies & prices</span>${icon.arrow}</a>
-        <a class="btn btn--ghost btn--lg" href="${waLink(c, `Hi ${c.name}, I'd like to know about your puppies.`)}" target="_blank" rel="noopener" data-magnetic>${icon.whatsapp}<span>WhatsApp us</span></a>
+        <a class="btn btn--accent btn--lg" href="#puppies" data-magnetic><span>See puppies & prices</span>${icon.arrow}</a>
+        <a class="btn btn--wa btn--lg" href="${waLink(c, `Hi ${c.name}, I'd like to know about your puppies.`)}" target="_blank" rel="noopener" data-magnetic>${icon.whatsapp}<span>WhatsApp us</span></a>
+      </div>
+      <div class="coats" data-hero-in>
+        <span class="coats__l">Try a breed</span>
+        ${data.heroBreeds.map((h, i) => `<button type="button" class="coats__b${i ? "" : " is-on"}" data-coat-btn="${h.coat}">${esc(h.word)}</button>`).join("")}
       </div>
     </div>
-    <div class="hero__fan" aria-hidden="true">
-      ${fan.map((b, i) => `<div class="fan__slot" data-fan-slot><div class="fan__card" data-fan="${i}">${breedArt(b, root, { eager: true })}<span class="fan__name">${esc(b.name)}</span></div></div>`).join("")}
+    <div class="stage" data-puppy-stage>
+      <span class="stage__blob" aria-hidden="true"></span>
+      <canvas class="stage__canvas" data-puppy data-rise="reveal" data-cursor="Pet me" aria-label="A 3D puppy. Tap it to make it hop."></canvas>
+      <p class="bubble" data-bubble aria-hidden="true">Woof!</p>
+      <p class="stage__hint" aria-hidden="true"><b>Tap the puppy.</b> It likes it.</p>
+      <span class="stage__fallback" aria-hidden="true">${icon.paw}</span>
     </div>
-  </div>
-  <div class="hero__scroll" aria-hidden="true">
-    <svg viewBox="0 0 120 120"><defs><path id="ring" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#ring">SCROLL TO MEET THEM · SCROLL TO MEET THEM · </textPath></text></svg>
-    <span>${icon.paw}</span>
   </div>
   <div class="hero__curtain" aria-hidden="true"></div>
 </section>
@@ -58,14 +54,16 @@ module.exports = function home(data) {
   </div>
 </section>
 
+<div class="mbands" aria-hidden="true">
+  <div class="mband mband--sky"><div class="mband__track" data-band="-1">${[0, 1].map(() => `<span>${data.breeds.map((b) => `${esc(b.name)}<i>${icon.paw}</i>`).join("")}</span>`).join("")}</div></div>
+  <div class="mband mband--lilac"><div class="mband__track" data-band="1">${[0, 1].map(() => `<span>${["Vet-checked", "Vaccinated for age", "8+ weeks old", "Meet before you decide", "Photos & videos on WhatsApp", c.city].map((t) => `${esc(t)}<i>${icon.paw}</i>`).join("")}</span>`).join("")}</div></div>
+</div>
+
 <section class="stats">
   <div class="wrap stats__grid">
     <div class="stat"><span class="stat__n" data-count="${data.breeds.length}">${data.breeds.length}</span><span class="stat__l">breeds, from toy to giant</span></div>
     <div class="stat"><span class="stat__n" data-count="8">8</span><span class="stat__l">weeks minimum before any puppy goes home</span></div>
     <div class="stat"><span class="stat__n" data-count="1">1</span><span class="stat__l">message to get prices, photos and videos</span></div>
-  </div>
-  <div class="marquee" data-marquee aria-hidden="true">
-    <div class="marquee__track">${[0, 1].map(() => `<span>${data.breeds.map((b) => `${esc(b.name)}<i>${icon.paw}</i>`).join("")}</span>`).join("")}</div>
   </div>
 </section>
 
@@ -121,19 +119,64 @@ module.exports = function home(data) {
   <div class="wrap process__in">
     <div class="process__copy">
       <p class="eyebrow">How it works</p>
-      <h2 class="h2">From first message<br>to first <em>walk.</em></h2>
-      <p class="lead">No forms to print, no deposits before you've met the puppy.</p>
-      <button class="btn btn--dark btn--lg" type="button" data-quote-open data-magnetic><span>Start with step one</span>${icon.arrow}</button>
+      <h2 class="h2">From first tap<br>to first <em>walk.</em></h2>
+      <ol class="steplist" data-steplist>
+        ${data.steps.map((st, i) => `<li${i ? "" : ' class="on"'} data-n="0${i + 1}"><b>${esc(st.title)}</b><p>${esc(st.text)}</p></li>`).join("")}
+      </ol>
+      <button class="btn btn--accent btn--lg" type="button" data-quote-open data-magnetic><span>Start with step one</span>${icon.arrow}</button>
     </div>
-    <div class="process__stack">
-      ${data.steps.map((s, i) => `<article class="step" data-step-card>
-        <span class="step__n">0${i + 1}</span>
-        <h3 class="step__t">${esc(s.title)}</h3>
-        <p>${esc(s.text)}</p>
-        <span class="step__paw">${icon.paw}</span>
-      </article>`).join("")}
+    <div class="phone" role="img" aria-label="Illustration: choosing a Labrador, answering three questions, getting photos and the price on WhatsApp, and booking a visit">
+      <div class="phone__screen">
+        <div class="phone__bar"><span>9:41</span><span>5G</span></div>
+
+        <div class="scr scr--browse" data-scr="0">
+          <div class="app__head"><span class="logo__mark">${icon.paw}</span><b>${esc(c.name)}</b></div>
+          <p class="app__h">Choose a breed.</p>
+          <div class="app__grid">
+            ${["labrador-retriever", "pomeranian", "siberian-husky", "beagle"].map((id) => { const b = byId[id]; return `<div class="app__card${id === "labrador-retriever" ? " is-target" : ""}"><div class="app__art" style="--c1:${b.coat[0]};--c2:${b.coat[1]}"></div><b>${esc(b.name)}</b><span class="app__btn">View Price</span>${id === "labrador-retriever" ? '<span class="tap" data-tap="0"></span>' : ""}</div>`; }).join("")}
+          </div>
+        </div>
+
+        <div class="scr scr--flash" data-scr="1">
+          <p class="app__eyebrow">Price & availability</p>
+          <p class="app__h">Get the price for a <em>Labrador</em></p>
+          <div class="app__deck">
+            <div class="app__flash" data-mini-flash="1"><small>03</small><b>When would you like to bring them home?</b><span class="app__opt">This week</span><span class="app__opt" data-pick="2">This month<span class="tap" data-tap="2"></span></span><span class="app__opt">Just exploring</span></div>
+            <div class="app__flash" data-mini-flash="0"><small>02</small><b>Male or female?</b><span class="app__opt">Male</span><span class="app__opt" data-pick="1">Female<span class="tap" data-tap="1"></span></span><span class="app__opt">No preference</span></div>
+          </div>
+        </div>
+
+        <div class="scr scr--chat" data-scr="2">
+          <div class="chat__head"><span class="logo__mark">${icon.paw}</span><div><b>${esc(c.name)}</b><small data-chat-status>online</small></div></div>
+          <div class="chat__body"><div class="chat__list" data-chat-list>
+            <p class="msg msg--out" data-msg>Hi! I'd like the price for a Labrador puppy.<br>Female · This month</p>
+            <p class="msg msg--typing" data-msg><i></i><i></i><i></i></p>
+            <p class="msg msg--in" data-msg>Hi Harpreet! Two Labrador girls are ready to go home.</p>
+            <div class="msg msg--in msg--media" data-msg><span style="--c1:#e2be85;--c2:#f6e7c9"></span><span style="--c1:#c9a270;--c2:#f3e2c4"></span><span style="--c1:#e9cc98;--c2:#fff3dc"></span></div>
+            <div class="msg msg--in msg--video" data-msg><span class="msg__play"></span><small>0:24</small></div>
+            <p class="msg msg--in msg--doc" data-msg><b>Price + vaccination record.pdf</b><small>2 pages</small></p>
+            <p class="msg msg--in" data-msg>Would you like to meet them on Saturday?</p>
+            <p class="msg msg--out" data-msg>Yes! Saturday, 11 am.</p>
+          </div></div>
+        </div>
+
+        <div class="scr scr--visit" data-scr="3">
+          <div class="map" aria-hidden="true">
+            <svg viewBox="0 0 300 330" preserveAspectRatio="xMidYMid slice"><rect width="300" height="330" fill="#ebedd8"/><g fill="#dde0bd"><rect x="18" y="20" width="90" height="80" rx="12"/><rect x="150" y="14" width="130" height="100" rx="12"/><rect x="18" y="150" width="70" height="140" rx="12"/><rect x="130" y="160" width="150" height="70" rx="12"/><rect x="140" y="260" width="140" height="60" rx="12"/></g><g stroke="#f8f9f2" stroke-width="14" fill="none" stroke-linecap="round"><path d="M0 128H300M118 0V330M0 245H300M206 128V330"/></g><path data-route d="M30 310 V245 H118 V128 H206 V80" fill="none" stroke="#4a051c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 10"/></svg>
+            <span class="map__pin" data-pin>${icon.paw}</span>
+          </div>
+          <div class="visit">
+            <small>Visit booked</small>
+            <b>Saturday · 11:00 am</b>
+            <p>${esc(c.name)}, ${esc(c.city)}</p>
+            <ul class="visit__checks">${["Vet health check", "Vaccinated for age", "Diet & care chart"].map((t) => `<li data-check>${icon.check}<span>${t}</span></li>`).join("")}</ul>
+            <span class="visit__stamp" data-visit-stamp>${icon.paw}<span>Ready<br>for home</span></span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+  <p class="process__note">Illustration of how a price request works.</p>
 </section>
 
 <section class="promise" id="promise" data-promise>
@@ -190,14 +233,22 @@ module.exports = function home(data) {
 </section>
 
 <section class="final" data-final>
-  <div class="final__in">
-    <p class="eyebrow eyebrow--light">One message away</p>
-    <h2 class="final__h" data-final-h>Ask for<br>a <em>price.</em></h2>
-    <p class="final__lead">Tell us the breed. We'll send the price, photos and videos of the puppies available now.</p>
-    <div class="final__cta">
-      <button class="btn btn--accent btn--xl" type="button" data-quote-open data-magnetic><span>Get a price</span>${icon.arrow}</button>
-      <a class="btn btn--light btn--xl" href="tel:${c.phone}" data-magnetic>${icon.phone}<span>Call us</span></a>
-      <a class="btn btn--wa btn--xl" href="${waLink(c, `Hi ${c.name}, I'd like a price for a puppy.`)}" target="_blank" rel="noopener" data-magnetic>${icon.whatsapp}<span>WhatsApp</span></a>
+  <div class="wrap final__in">
+    <div class="final__copy">
+      <p class="eyebrow eyebrow--light">One message away</p>
+      <h2 class="final__h" data-final-h>Ask for<br>a <em>price.</em></h2>
+      <p class="final__lead">Tell us the breed. We'll send the price, photos and videos of the puppies available now.</p>
+      <div class="final__cta">
+        <button class="btn btn--accent btn--xl" type="button" data-quote-open data-magnetic data-confetti><span>Get a price</span>${icon.arrow}</button>
+        <a class="btn btn--light btn--xl" href="tel:${c.phone}" data-magnetic>${icon.phone}<span>Call us</span></a>
+        <a class="btn btn--wa btn--xl" href="${waLink(c, `Hi ${c.name}, I'd like a price for a puppy.`)}" target="_blank" rel="noopener" data-magnetic>${icon.whatsapp}<span>WhatsApp</span></a>
+      </div>
+    </div>
+    <div class="stage stage--final" data-puppy-stage>
+      <span class="stage__blob" aria-hidden="true"></span>
+      <canvas class="stage__canvas" data-puppy data-coat="golden" data-cursor="Pet me" aria-label="A 3D puppy. Tap it to make it hop."></canvas>
+      <p class="bubble bubble--talk" data-speech="${esc(JSON.stringify(speech))}" aria-hidden="true">${esc(speech[0])}</p>
+      <span class="stage__fallback" aria-hidden="true">${icon.paw}</span>
     </div>
   </div>
 </section>`;
@@ -210,6 +261,7 @@ module.exports = function home(data) {
     canonical: "",
     preloader: true,
     scripts: ["home.js"],
+    modules: ["puppy.js"],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "PetStore",

@@ -2,17 +2,30 @@
 
 A scroll-driven website for **Paws Boutique**, a pedigree puppy business in Amritsar. Every page is built to end in one action: **ask for a price**.
 
-- **Home** is a scroll-driven story built with GSAP 3.13 (ScrollTrigger, SplitText, Flip) and Lenis smooth scrolling:
-  1. A preloader counts to 100 while paw prints stamp in, then a curtain lifts.
-  2. A hand of breed cards deals into a fan. On scroll they scatter, a paw-print trail walks across the screen and a green curtain rises.
-  3. The manifesto lights up word by word.
-  4. The stats count up, above a marquee of breed names that skews with scroll speed.
-  5. The five size groups (toy to giant) scroll sideways while the paw grows.
-  6. The breed listing has Flip-animated filter tabs.
-  7. The "How it works" cards stack on top of each other.
-  8. A puppy health record turns in 3D, its checks tick off and a "Ready for home" stamp lands.
-  9. A thermometer climbs to 45°C and sorts breeds by how they handle an Amritsar summer.
-  10. The final "Ask for a price." headline drops in letter by letter.
+- **Home** is a scroll-driven story built with GSAP 3.13 (ScrollTrigger, SplitText, Flip), Lenis smooth scrolling and Three.js:
+  1. **Loading screen.** "Sit. Stay. Good puppy." plays while paw prints stamp in, then the screen closes like a camera iris. It plays once per visit.
+  2. **Hero.** A **3D puppy built entirely in code**, with no model files, so the client owns it outright.
+     - Its head follows the cursor. It blinks, tilts its head when idle, wags its tail and pants when happy, and its floppy ears swing.
+     - Tapping it makes it hop and burst into hearts, and it barks in a speech bubble.
+     - The headline's breed word rotates ("Meet your new Labrador / Husky / Golden…"). Each time, the puppy spins into that breed's coat and its ears flip between floppy and upright.
+     - "Try a breed" buttons switch it by hand. Paw prints follow the cursor.
+  3. **Manifesto.** A green circle grows to fill the screen, then the manifesto lights up word by word.
+  4. **Bands and stats.** Two tilted marquee bands react to scroll speed, above counters.
+  5. **Sizes.** The five size groups scroll sideways while the paw grows.
+  6. **Breed listing.** Sticker-style cards with Flip-animated filter tabs and 3D tilt.
+  7. **How it works (pinned).** As you scroll, a phone acts out a price request:
+     - tapping View Price on a Labrador, answering the flashcards
+     - the WhatsApp chat filling with photos, a video and the price PDF
+     - a map pin dropping on a booked visit
+  8. **Health record.** It turns in 3D, ticks off its checks and gets a "Ready for home" stamp.
+  9. **Summer guide.** The thermometer climbs to 45°C.
+  10. **FAQ.**
+  11. **Final call to action.** A second 3D puppy with a speech bubble that cycles through lines.
+- **Everywhere:**
+  - Headings drop in letter by letter.
+  - The price buttons burst into paw confetti.
+  - A paw-print panel wipes between pages.
+  - Desktop gets a custom cursor, magnetic buttons and card tilt.
 - **Puppies** (`puppies.html`) lists all breeds with search, size tabs, a "Good for flats" filter and a "Handles summer heat" filter. `?size=toy` (or small, medium, large, giant) opens a tab directly.
 - **Breed pages** (`breeds/<id>.html`): one SEO page per breed ("Labrador Retriever puppies for sale in Amritsar") with a fit table, the health promise and similar breeds.
 - **View Price** opens the quote **flashcards**: breed → male/female → when → name and WhatsApp number. The breed is pre-selected from the card the visitor tapped. Each answer flips to the next card. The panel always shows **Call us** and **WhatsApp us** as alternatives.
@@ -67,7 +80,8 @@ Set `leadWebhook` to an n8n (or any) webhook URL and each request is POSTed ther
 | Styles (design tokens at the top) | `src/assets/css/site.css` |
 | Homepage scroll choreography | `src/assets/js/home.js` |
 | Smooth scroll, cursor, filters, quote flashcards | `src/assets/js/site.js` |
-| GSAP 3.13 + plugins, Lenis (self-hosted, no CDN) | `src/assets/vendor/` |
+| The 3D puppy (shapes, coats, behaviour) | `src/assets/js/puppy.js` |
+| GSAP 3.13 + plugins, Lenis, Three.js r170 (self-hosted, no CDN) | `src/assets/vendor/` |
 
 ## Design
 
@@ -78,4 +92,5 @@ Set `leadWebhook` to an n8n (or any) webhook URL and each request is POSTed ther
   - Lilac `#F2D5F8`: the highlighter stroke behind key words in headings, plus card and step fills.
   - WhatsApp green stays on WhatsApp buttons so visitors recognise them.
 - **Type:** Helvetica Neue throughout (`--display` and `--sans` in `site.css`), with tight tracking on headings. The stack falls back to Helvetica, then Arial. Helvetica Neue is built into Apple devices only. Windows shows Arial and Android shows Roboto, unless a Helvetica Neue web-font licence is bought and the files are self-hosted in `src/assets/fonts/`.
+- **Performance:** Three.js (about 170 KB gzipped) loads only on the homepage. Each puppy stops rendering when it scrolls off screen. Without WebGL, a paw illustration takes its place.
 - **Accessibility:** the site respects `prefers-reduced-motion`. With reduced motion, pinning, smooth scroll and the preloader are switched off and all content is shown at once. The quote dialog traps focus, closes on Escape and works with the keyboard alone. If the scripts fail to load, the page falls back to a static layout after 4 seconds.

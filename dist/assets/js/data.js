@@ -133,5 +133,15 @@
     { q: "What support do I get after I take the puppy home?", a: "You get a diet and care chart, the vaccination schedule, and our WhatsApp number for any question in the first months." },
   ];
 
-  return { company, sizes, breeds, promises, steps, faqs };
+  // The 3D puppy in the hero cycles through these coats; the headline names each one.
+  const heroBreeds = [
+    { coat: "labrador", word: "Labrador", breed: "labrador-retriever" },
+    { coat: "husky", word: "Husky", breed: "siberian-husky" },
+    { coat: "golden", word: "Golden", breed: "golden-retriever" },
+    { coat: "shepherd", word: "Shepherd", breed: "german-shepherd" },
+    { coat: "pomeranian", word: "Pom", breed: "pomeranian" },
+    { coat: "beagle", word: "Beagle", breed: "beagle" },
+  ];
+
+  return { company, sizes, breeds, promises, steps, faqs, heroBreeds };
 });
