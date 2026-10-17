@@ -58,6 +58,21 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* ---------- Nav: a sky blob slides under whichever link you point at ---------- */
+  const navEl = $("[data-nav]");
+  const blob = $("[data-nav-blob]");
+  if (navEl && blob && motion) {
+    let shown = false;
+    $$("a", navEl).forEach((a) => a.addEventListener("pointerenter", () => {
+      const props = { x: a.offsetLeft, width: a.offsetWidth };
+      if (!shown) gsap.set(blob, props);
+      gsap.to(blob, { ...props, opacity: 1, duration: shown ? 0.5 : 0.25, ease: "expo.out", overwrite: true });
+      gsap.fromTo(a, { y: 0 }, { y: -2, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out" });
+      shown = true;
+    }));
+    navEl.addEventListener("pointerleave", () => { shown = false; gsap.to(blob, { opacity: 0, duration: 0.3, overwrite: true }); });
+  }
+
   /* ---------- Mobile menu ---------- */
   const menu = $("[data-mobile-menu]");
   const menuBtn = $("[data-menu-toggle]");
@@ -137,6 +152,8 @@
   function intro() {
     if (!motion) return null;
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
+      .from(".header__in", { yPercent: -160, rotation: -2, duration: 1.1, ease: "back.out(1.4)" }, 0)
+      .from(".header__in > *, .nav a", { y: -14, opacity: 0, duration: 0.6, stagger: 0.04 }, 0.25)
       .to(".line > span", { y: 0, duration: 1.4, stagger: 0.09 }, 0)
       .to("[data-hero-in]", { opacity: 1, duration: 0.01 }, 0.2)
       .from("[data-hero-in]", { y: 30, duration: 1.1, stagger: 0.08 }, 0.2)

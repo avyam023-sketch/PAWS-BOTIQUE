@@ -22,6 +22,7 @@ A scroll-driven website for **Paws Boutique**, a pedigree puppy business in Amri
   10. **FAQ.**
   11. **Final call to action.** The husky looks up at a speech bubble that cycles through lines. The back-view husky sits on the footer's top edge.
 - **Layout:** sections stack like sheets: the breed listing (lilac), health record, summer guide and FAQ (white cards on sage) each slide over the one before with rounded tops. "How it works" sits on sky.
+- **Navbar:** a floating pill with a sticker-style maroon border and offset shadow. It has a round husky avatar for the logo, and a sky blob slides under whichever link you point at; the current page is marked in lilac. It drops in on load, tightens as you scroll and hides on the way down.
 - **Everywhere:**
   - Headings drop in letter by letter.
   - The price buttons burst into paw confetti.

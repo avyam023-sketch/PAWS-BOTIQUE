@@ -15,15 +15,16 @@ function header(data, root, page) {
   return `<header class="header" data-header>
   <div class="header__in">
     <a class="logo" href="${root}index.html" aria-label="${esc(c.name)} home">
-      <span class="logo__mark">${icon.paw}</span>
-      <span class="logo__word">${esc(c.name)}</span>
+      <span class="logo__pup"><img src="${root}assets/img/brand/husky-front.webp" alt="" width="808" height="1253"></span>
+      <span class="logo__word">${esc(c.name)}<small>${esc(c.city)}</small></span>
     </a>
-    <nav class="nav" aria-label="Main">
+    <nav class="nav" aria-label="Main" data-nav>
+      <span class="nav__blob" aria-hidden="true" data-nav-blob></span>
       ${nav.map(([l, h, k]) => `<a href="${h}"${k && k === page ? ' aria-current="page"' : ""}>${l}</a>`).join("")}
     </nav>
     <div class="header__cta">
-      <a class="header__call" href="tel:${c.phone}" data-magnetic>${icon.phone}<span>${esc(c.phoneDisplay)}</span></a>
-      <button class="btn btn--sm btn--dark" type="button" data-quote-open data-magnetic>Get a price</button>
+      <a class="header__call" href="tel:${c.phone}" aria-label="Call ${esc(c.phoneDisplay)}" data-magnetic><span class="header__call-ic">${icon.phone}</span><span class="header__call-n">${esc(c.phoneDisplay)}</span></a>
+      <button class="btn btn--sm btn--accent" type="button" data-quote-open data-magnetic><span>Get a price</span>${icon.arrow}</button>
       <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span class="sr">Menu</span></button>
     </div>
   </div>
