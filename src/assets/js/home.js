@@ -39,7 +39,7 @@
       x: (i) => (i - 2) * innerWidth * 0.28, y: (i) => -innerHeight * [0.75, 0.95, 1.1, 0.9, 0.7][i], rotation: (i) => (i - 2) * 22,
       scale: 1.15, ease: "power2.in", duration: 0.7, stagger: { each: 0.03, from: "center" },
     }, 0)
-    .to(trail, { opacity: 0.55, scale: 1.25, color: "#b9743f", duration: 0.12, stagger: 0.035, ease: "back.out(3)" }, 0.05)
+    .to(trail, { opacity: 0.55, scale: 1.25, color: "#4a051c", duration: 0.12, stagger: 0.035, ease: "back.out(3)" }, 0.05)
     .to(".hero__scroll", { opacity: 0, scale: 0.6, duration: 0.2 }, 0)
     .to(".hero__curtain", { clipPath: "circle(150% at 50% 100%)", ease: "power2.inOut", duration: 0.5 }, 0.55);
 
@@ -179,8 +179,8 @@
     const o = { t: 18 };
     gsap.timeline({ scrollTrigger: { trigger: "[data-heat-section]", start: "top 75%", end: "center 55%", scrub: 1 } })
       .to(o, { t: 45, ease: "none", onUpdate: () => (temp.textContent = Math.round(o.t)) }, 0)
-      .fromTo("[data-heat-section]", { backgroundColor: "#f3eee4" }, { backgroundColor: "#f0dcc0", ease: "none" }, 0)
-      .fromTo(".heat__temp", { scale: 0.8, color: "#4c7a96" }, { scale: 1, color: "#b9743f", ease: "none" }, 0);
+      .fromTo("[data-heat-section]", { backgroundColor: "#dde0bd" }, { backgroundColor: "#f2d5f8", ease: "none" }, 0)
+      .fromTo(".heat__temp", { scale: 0.8, color: "#3a9fd0" }, { scale: 1, color: "#4a051c", ease: "none" }, 0);
     gsap.from("[data-heat-col]", { y: 80, opacity: 0, rotation: (i) => [-4, 0, 4][i], duration: 1.1, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".heat__cols", start: "top 85%", once: true } });
   }
 

@@ -151,11 +151,8 @@ function layout({ title, description, body, data, depth = 0, page = "", scripts 
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${url}">
-<meta name="theme-color" content="#16332B">
+<meta name="theme-color" content="#4A051C">
 <link rel="icon" href="${root}favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${root}assets/css/site.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ""}
 <script>(function(d){d.classList.add("js");if(matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("no-motion");setTimeout(function(){if(!window.PB_READY)d.classList.add("no-motion")},4000)})(document.documentElement)</script>

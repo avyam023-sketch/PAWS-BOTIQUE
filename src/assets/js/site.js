@@ -131,12 +131,18 @@
   }
 
   /* ---------- Entrance + scroll reveals ---------- */
+  // Draws the lilac highlighter stroke under key words, left to right.
+  function highlight(ems) {
+    return gsap.fromTo(ems, { backgroundSize: "0% 0.38em" }, { backgroundSize: "100% 0.38em", duration: 1, stagger: 0.15, ease: "expo.inOut" });
+  }
+
   function intro() {
     if (!motion) return null;
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
       .to(".line > span", { y: 0, duration: 1.4, stagger: 0.09 }, 0)
       .to("[data-hero-in]", { opacity: 1, duration: 0.01 }, 0.2)
-      .from("[data-hero-in]", { y: 30, duration: 1.1, stagger: 0.08 }, 0.2);
+      .from("[data-hero-in]", { y: 30, duration: 1.1, stagger: 0.08 }, 0.2)
+      .add(highlight($$(".hero__h1 em, .page-hero__h em")), 0.9);
     const media = $("[data-breed-media]");
     if (media) tl.from(media, { clipPath: "inset(100% 0% 0% 0% round 32px)", duration: 1.6, ease: "expo.inOut" }, 0).from($("img, .art", media), { scale: 1.25, duration: 2, ease: "expo.out" }, 0.2);
     return tl;
@@ -149,7 +155,9 @@
       $$(".h2:not([data-no-split]), .footer__h").forEach((el) => {
         SplitText.create(el, {
           type: "lines", mask: "lines", autoSplit: true,
-          onSplit: (self) => gsap.from(self.lines, { yPercent: 110, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
+          onSplit: (self) => gsap.timeline({ scrollTrigger: { trigger: el, start: "top 88%", once: true } })
+            .from(self.lines, { yPercent: 110, duration: 1.2, stagger: 0.1, ease: "expo.out" })
+            .add(highlight(el.querySelectorAll("em")), 0.5),
         });
       });
     }

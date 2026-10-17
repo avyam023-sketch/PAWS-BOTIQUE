@@ -71,6 +71,11 @@ Set `leadWebhook` to an n8n (or any) webhook URL and each request is POSTed ther
 
 ## Design
 
-- **Palette:** warm paper (`#FBF8F3`), deep forest green (`#16332B`), ink (`#16201B`), caramel accent (`#B9743F`) taken from a retriever's coat, with sand and sage as supporting colours.
-- **Type:** Fraunces (display serif, italic for accents) and Plus Jakarta Sans (UI and body text).
+- **Palette:**
+  - Sage `#DDE0BD`: secondary sections and chips. A 20% tint of it, `#F8F9F2`, is the page background.
+  - Maroon `#4A051C`: text, dark sections and primary buttons. A darker shade, `#2E0211`, is used for the footer and "How it works".
+  - Sky `#89DAFF`: the call-to-action button, and accents on maroon.
+  - Lilac `#F2D5F8`: the highlighter stroke behind key words in headings, plus card and step fills.
+  - WhatsApp green stays on WhatsApp buttons so visitors recognise them.
+- **Type:** Helvetica Neue throughout (`--display` and `--sans` in `site.css`), with tight tracking on headings. The stack falls back to Helvetica, then Arial. Helvetica Neue is built into Apple devices only. Windows shows Arial and Android shows Roboto, unless a Helvetica Neue web-font licence is bought and the files are self-hosted in `src/assets/fonts/`.
 - **Accessibility:** the site respects `prefers-reduced-motion`. With reduced motion, pinning, smooth scroll and the preloader are switched off and all content is shown at once. The quote dialog traps focus, closes on Escape and works with the keyboard alone. If the scripts fail to load, the page falls back to a static layout after 4 seconds.
